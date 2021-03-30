@@ -13,22 +13,12 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', [App\Http\Controllers\WelcomeController::class, 'index'])->name('welcome');
 
-Route::get('/buatTim', function(){
-    return view('buatTim');
-});
+// Auth::routes();
 
-Route::get('/home', function(){
-    return view('home');
-});
+// Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
-Route::get('/register', function(){
-    return view('register');
-});
-
-Route::get('/login', function(){
-    return view('login');
-});
+// Topup
+Route::get('/topup', [App\Http\Controllers\TopupController::class, 'index'])->name('topupIndex');
+Route::post('/topup', [App\Http\Controllers\TopupController::class, 'redeem'])->name('topupRedeem');
