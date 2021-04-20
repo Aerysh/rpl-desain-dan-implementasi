@@ -9,11 +9,7 @@ use Illuminate\Support\Facades\Auth;
 
 class TopupController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function index()
     {
         return view('topup.index');

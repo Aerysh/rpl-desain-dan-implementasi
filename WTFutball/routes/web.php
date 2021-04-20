@@ -15,10 +15,15 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [App\Http\Controllers\WelcomeController::class, 'index'])->name('welcome');
 
-// Auth::routes();
+Auth::routes();
 
-// Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('logout', [App\Http\Controllers\Auth\LoginController::class, 'logout'])->name('logout');
+
+// Buat Tim
+Route::post('/tim', [App\Http\Controllers\TimController::class, 'store'])->name('buatTim');
 
 // Topup
 Route::get('/topup', [App\Http\Controllers\TopupController::class, 'index'])->name('topupIndex');
 Route::post('/topup', [App\Http\Controllers\TopupController::class, 'redeem'])->name('topupRedeem');
+

@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Tim_User;
+use Auth;
 
 class HomeController extends Controller
 {
@@ -23,6 +25,10 @@ class HomeController extends Controller
      */
     public function index()
     {
+        $cekTimUser = Tim_User::where('usersId', Auth::id())->get();
+        if($cekTimUser->isEmpty()){
+            return view('buatTim')->with('noTeam', 'no team');
+        }
         return view('home');
     }
 }
