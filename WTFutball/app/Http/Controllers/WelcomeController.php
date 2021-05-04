@@ -14,9 +14,11 @@ class WelcomeController extends Controller
      */
     public function index()
     {
-        // Get From API
+        // Mengambil data berita dari API
         $response = Http::get('https://newsapi.org/v2/top-headlines?country=id&category=sports&apiKey=a1bec80007bd468fa14a981cbe4c1923');
+        // Decode json dari data API
         $responseDecode = json_decode($response, true);
+        // Pass data hasil decode ke view
         return view('welcome', compact('responseDecode'));
     }
 
