@@ -34,7 +34,14 @@ class HomeController extends Controller
 
         return view('home');
     }
-
+    /**
+     * Menghitung rating total dari tim suatu yang dimiliki user
+     * Algoritma akan menghitung berapa rata-rata rating pemain pada setiap posisi
+     * Lalu rata-rata tersebut akan dijumlahkan kemudian dibagi 4 (karena terdapat 4 posisi yang berbeda pada suatu tim)
+     * (FWD=Forward, MID=Midfielder, DEF=Defender, GK=GoalKeeper
+     *
+     * @return $rating
+     */
     public function hitungRatingUser(){
         $timId = Tim_User::where('usersId', Auth::id())->select('timId')->get();
         foreach($timId as $tim);
