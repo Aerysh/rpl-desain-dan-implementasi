@@ -20,7 +20,7 @@ class TimController extends Controller
             'nama'      =>  $request->namaTim,
         ]);
 
-        $timId  =   Tim::orderBy('id', 'desc')->select('id')->get();
+        $timId  =   Tim::orderBy('id', 'asc')->select('id')->get();
 
         foreach($timId as $tim);
         DB::table('users_tim')->insert([

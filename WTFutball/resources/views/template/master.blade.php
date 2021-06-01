@@ -24,7 +24,7 @@
                     <a class="nav-link" href="{{ url('/home')}}">Home</a>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link" href="{{ url('/transfer')}}">Transaksi Pemain</a>
+                    <a class="nav-link" href="{{ url('/transaksi')}}">Transaksi Pemain</a>
                   </li>
                   <li class="nav-item">
                     <a class="nav-link" href="{{ url('/formasi')}}">Atur Formasi</a>
@@ -34,6 +34,9 @@
                   </li>
                 </ul>
                 <ul class="navbar-nav my-2 my-lg-0">
+                  <li class="nav-item">
+                    <a class="nav-link" disabled>Saldo : {{Auth::user()->saldo}}</a>
+                  </li>
                   <li class="nav-item">
                     <a class="nav-link" href="/logout">Logout</a>
                   </li>

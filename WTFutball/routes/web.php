@@ -27,3 +27,5 @@ Route::post('/tim', [App\Http\Controllers\TimController::class, 'store'])->name(
 Route::get('/topup', [App\Http\Controllers\TopupController::class, 'index'])->name('topupIndex');
 Route::post('/topup', [App\Http\Controllers\TopupController::class, 'redeem'])->name('topupRedeem');
 
+// Transaksi Pemain
+Route::get('/transaksi', [App\Http\Controllers\TransaksiController::class, 'index'])->name('transaksiIndex');
