@@ -30,24 +30,4 @@ class TimController extends Controller
 
         return redirect('home');
     }
-
-    public function show(Tim $tim)
-    {
-        //
-    }
-
-    public function edit(Tim $tim)
-    {
-        //
-    }
-
-    public function update(Request $request, Tim $tim)
-    {
-        //
-    }
-
-    public function destroy(Tim $tim)
-    {
-        //
-    }
 }
