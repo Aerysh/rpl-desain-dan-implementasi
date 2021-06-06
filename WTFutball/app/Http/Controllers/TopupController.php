@@ -25,11 +25,16 @@ class TopupController extends Controller
     public function redeem(Request $request){
         $check = Topup::where('code', $request->voucherCode)->get();
 
+        foreach($check as $c);
+
         if(!$check->isEmpty()){
             $saldoUser  = User::where('id', Auth::id())->select('saldo')->get();
+            foreach($saldoUser as $saldo);
             User::where('id', Auth::id())->update([
-                'saldo'     =>  $saldoUser + $check->saldo(),
+                'saldo'     =>  $saldo->saldo + $c->saldo,
             ]);
+
+            Topup::where('code', $request->voucherCode)->delete();
 
             return back()->with('voucher-sukses', 'voucher sukses');
         }

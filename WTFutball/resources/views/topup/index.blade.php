@@ -4,13 +4,12 @@
 
 @section('content')
    
+
 <div class="row" style="padding-top: 25px;"> 
     <div class="col-md-3">
     </div>
     <div class="col-md-6">
-        
-        <div class="card">
-            @if (session('voucher-sukses'))
+        @if (session('voucher-sukses'))
                 <div class="alert alert-success" role="alert">
                     Selamat! Topup Anda Berhasil, Saldo Akan Ditambahkan Ke Akun Anda.
                 </div>
@@ -20,9 +19,11 @@
                     Maaf, Kode Voucher Tidak Valid. Silahkan Coba Lagi.
                 </div>
             @endif
+        <div class="card">
             <div class="card-body">
                 <h5 class="card-title">Top Up</h5>
                 <form action="{{route('topupRedeem')}}" method="POST">
+                    {{ csrf_field() }}
                     <div class="form-group">
                         <label for="voucherCode">Voucher Code</label>
                         <input type="text" class="form-control" id="voucherCode" name="voucherCode" placeholder="Voucher Code" required>

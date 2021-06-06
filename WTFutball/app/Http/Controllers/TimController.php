@@ -14,23 +14,20 @@ class TimController extends Controller
         return view('buatTim');
     }
 
-    /**
-    * Fungsi Buat Tim bagi User
-    */
     public function store(Request $request)
     {
         Tim::insert([
             'nama'      =>  $request->namaTim,
-        ]); // Insert nama tim ke database Tim
+        ]);
 
-        $timId  =   Tim::orderBy('id', 'desc')->select('id')->get(); // mengambil id tim terbaru yang baru diinputkan ke database
+        $timId  =   Tim::orderBy('id', 'asc')->select('id')->get();
 
         foreach($timId as $tim);
         DB::table('users_tim')->insert([
             'usersId'   =>  Auth::id(),
             'timId'     =>  $tim->id,
-        ]); // Insert id tim ke database users_tim
+        ]);
 
-        return redirect('home'); // redirect user ke home
+        return redirect('home');
     }
 }

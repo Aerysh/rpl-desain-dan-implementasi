@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Tim_User;
 use App\Models\Tim;
+use App\Models\users_pertandingan;
 use Illuminate\Support\Facades\DB;
 use Auth;
 
@@ -27,23 +28,57 @@ class HomeController extends Controller
      */
     public function index()
     {
+        // Mengecek apakah user yang login sudah memiliki tim atau belum
+        // jika belum maka akan ke halaman buat tim
+        // jika sudah masuk ke home
         $cekTimUser = Tim_User::where('usersId', Auth::id())->get();
+
         if($cekTimUser->isEmpty()){
             return view('buatTim')->with('noTeam', 'no team');
         }
 
-        return view('home');
+        // mengambil nama tim user dari database
+        $namaTim = Tim_User::where('usersId', Auth::id())->join('tim', 'users_tim.timId', '=', 'tim.id')->select('tim.nama')->get();
+
+        // mengambil daftar pemain tim user
+        $daftarPemain = DB::table('tim')
+                        ->join('users_tim', 'tim.id', '=', 'users_tim.timId')
+                        ->where('users_tim.usersId', Auth::id())
+                        ->join('tim_player', 'tim.id', '=', 'tim_player.timId')
+                        ->join('player', 'player.id', '=', 'tim_player.playerId')
+                        ->select('player.id', 'player.nama', 'player.posisi')
+                        ->get();
+        
+        $ratingSaya = $this->hitungRatingUser(Auth::id());
+
+        if($this->historySkor()->isEmpty()){
+            return redirect('home', compact('namaTim', 'daftarPemain', 'ratingSaya'))->with('noHistory', 'no History');
+        }else{
+            $historySkor = $this->historySkor();
+            foreach($historySkor as $hs);
+            $historyLawan = $this->historyLawan($hs->awayId);
+
+            return view('home', compact('namaTim', 'historySkor', 'historyLawan', 'daftarPemain', 'ratingSaya'))->with('hasHistory', 'has history');
+        }
     }
-    /**
-     * Menghitung rating total dari tim suatu yang dimiliki user
-     * Algoritma akan menghitung berapa rata-rata rating pemain pada setiap posisi
-     * Lalu rata-rata tersebut akan dijumlahkan kemudian dibagi 4 (karena terdapat 4 posisi yang berbeda pada suatu tim)
-     * (FWD=Forward, MID=Midfielder, DEF=Defender, GK=GoalKeeper
-     *
-     * @return $rating
-     */
-    public function hitungRatingUser(){
-        $timId = Tim_User::where('usersId', Auth::id())->select('timId')->get();
+
+    public function historySkor(){
+        // mengambil history pertandingan user
+        return users_pertandingan::where('homeId', Auth::id())
+                ->join('pertandingan', 'users_pertandingan.pertandinganId', '=', 'pertandingan.id')
+                ->select('users_pertandingan.awayId', 'pertandingan.skorHome', 'pertandingan.skorAway', 'pertandingan.created_at')
+                ->get();
+    }
+
+    public function historyLawan($idLawan){
+        return Tim_User::where('usersId', $idLawan)
+                        ->join('tim', 'users_tim.timId', '=', 'tim.id')
+                        ->select('tim.nama')
+                        ->get();
+    }
+
+    public function hitungRatingUser($id){
+        $timId = Tim_User::where('usersId', $id)->select('timId')->get();
         foreach($timId as $tim);
         $ratingTim = DB::table('tim_player')->where('timId', $tim->timId)->join('player', 'tim_player.playerId', '=', 'player.id')->select('player.rating', 'player.posisi')->get();
 
