@@ -28,4 +28,10 @@ Route::get('/topup', [App\Http\Controllers\TopupController::class, 'index'])->na
 Route::post('/topup', [App\Http\Controllers\TopupController::class, 'redeem'])->name('topupRedeem');
 
 // Transaksi Pemain
+Route::prefix('transaksi')->group(function () {
+    Route::get('/beli', [App\Http\Controllers\TransaksiController::class, 'indexBeli'])->name('indexBeliPemain');
+    Route::get('/jual', [App\Http\Controllers\TransaksiController::class, 'indexJual'])->name('indexJualPemain');
+    Route::get('/beli/{id}', [App\Http\Controllers\TransaksiController::class, 'beliPemain'])->name('beliPemain');
+    Route::get('/jual/{id}', [App\Http\Controllers\TransaksiController::class, 'jualPemain'])->name('jualPemain');
+});
 Route::get('/transaksi', [App\Http\Controllers\TransaksiController::class, 'index'])->name('transaksiIndex');

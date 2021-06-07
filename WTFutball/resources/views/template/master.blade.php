@@ -13,7 +13,7 @@
         <header>
           <div class="navbar navbar-expand-lg navbar-dark bg-primary">
             <div class="container">
-              <a class="navbar-brand" href="#">WTFutball</a>
+              <a class="navbar-brand" href="/home">WTFutball</a>
               <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
               </button>
@@ -24,7 +24,7 @@
                     <a class="nav-link" href="{{ url('/home')}}">Home</a>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link" href="{{ url('/transaksi')}}">Transaksi Pemain</a>
+                    <a class="nav-link" href="#" data-toggle="modal" data-target="#transaksi">Transaksi Pemain</a>
                   </li>
                   <li class="nav-item">
                     <a class="nav-link" href="{{ url('/formasi')}}">Atur Formasi</a>
@@ -33,12 +33,16 @@
                     <a class="nav-link" href="{{ url('/topup')}}">Top-Up</a>
                   </li>
                 </ul>
+
                 <ul class="navbar-nav my-2 my-lg-0">
                   <li class="nav-item">
-                    <a class="nav-link" disabled>Saldo : {{Auth::user()->saldo}}</a>
+                    <a class="nav-link">Saldo : {{Auth::user()->saldo}}</a>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link" href="/logout">Logout</a>
+                    <form action="{{route('logout')}}" method="POST">
+                      {{ csrf_field() }}
+                      <button type="submit" class="btn btn-primary">Logout</button>
+                    </form>
                   </li>
                 </ul>
               </div>
@@ -46,9 +50,30 @@
           </div>
         </header>
 
-        <main role="main">
+        <main role="main" style="padding-bottom: 25px;">
             <div class="container">
                 @yield('content')
+
+                {{-- Modal Transaksi --}}
+                <div class="modal fade" id="transaksi" tabindex="-1" role="dialog" aria-labelledby="transaksi" aria-hidden="true">
+                  <div class="modal-dialog" role="document">
+                      <div class="modal-content">
+                          <div class="modal-header">
+                              <h5 class="modal-title" id="transaksi">Transaksi Pemain</h5>
+                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                  <span aria-hidden="true">&times;</span>
+                              </button>
+                          </div>
+                          <div class="modal-body">
+                            <center>
+                              <a href="{{route('indexBeliPemain')}}" class="btn btn-primary">Beli Pemain</a> 
+                              <a href="{{route('indexJualPemain')}}" class="btn btn-primary">Jual Pemain</a>
+                            </center>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+              {{-- Modal Transaksi --}}
             </div>
         </main>
 

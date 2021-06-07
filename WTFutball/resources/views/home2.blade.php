@@ -3,9 +3,6 @@
 @section('title', 'Home')
 
 @section('content')
-@if (session('noHistory'))
-    cek
-@endif
 <div class="row" style="padding-top: 25px">
     <div class="col-md-6">
         <div class="card">
@@ -23,7 +20,7 @@
         <div class="card">
             <div class="card-body">
                 <h5 class="card-title">Pemain Saya</h5>
-                <table class="table" style="width: 100%">
+                <table class="table table-dark table-striped dt-responsive nowrap" style="width: 100%" id="daftarPemain">
                     <thead>
                         <tr>
                             <th>Nama</th>
@@ -69,16 +66,23 @@
             <div class="card-body">
                 <h5 class="card-title">History Pertandingan</h5>
                 <div class="table-responsive">
-                    <table class="table table-hover" style="width: 100%">
+                    <table class="table table-dark table-striped dt-responsive nowrap" style="width: 100%" id="historyPertandingan">
                         <thead>
                             <tr>
+                                <th>Lawan</th>
                                 <th>Skor</th>
                                 <th>Tanggal</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
-                                <td colspan="3" style="text-align: center">Data Tidak Ditemukan</td>
+                                <td>{{$historySkor->get('lawan')}}</td>
+                                <td>
+                                    {{$historySkor->get('skorHome')}} - {{ $historySkor->get('skorAway')}}
+                                </td>
+                                <td>
+                                    {{date('d-M-y', strtotime($historySkor->get('created_at')))}}
+                                </td>
                             </tr>
                         </tbody>
                     </table>
@@ -90,10 +94,28 @@
 @stop
 
 @section('css')
-
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4/jq-3.3.1/dt-1.10.25/datatables.min.css"/>
 @stop
 
 @section('js')
+    <script type="text/javascript" src="https://cdn.datatables.net/v/bs4/jq-3.3.1/dt-1.10.25/datatables.min.js"></script>
 
+    <script>
+        $(document).ready( function () {
+            var table = $('#historyPertandingan').DataTable( {
+                pageLength : 5,
+                lengthMenu: [[5, 10, 20, -1], [5, 10, 20, 'All']]
+            })
+        });
+
+        $(document).ready( function () {
+            var table = $('#daftarPemain').DataTable( {
+                pageLength : 5,
+                lengthMenu: [[5, 10, 20, -1], [5, 10, 20, 'All']]
+            })
+        });
+    </script>
+
+    
 @stop
 

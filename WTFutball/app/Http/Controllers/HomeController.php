@@ -46,41 +46,71 @@ class HomeController extends Controller
                         ->where('users_tim.usersId', Auth::id())
                         ->join('tim_player', 'tim.id', '=', 'tim_player.timId')
                         ->join('player', 'player.id', '=', 'tim_player.playerId')
-                        ->select('player.id', 'player.nama', 'player.posisi')
+                        ->select('player.nama', 'player.posisi', 'player.rating')
                         ->get();
         
-        $ratingSaya = $this->hitungRatingUser(Auth::id());
-
-        if($this->historySkor()->isEmpty()){
-            return redirect('home', compact('namaTim', 'daftarPemain', 'ratingSaya'))->with('noHistory', 'no History');
+        $ratingSaya = round($this->hitungRatingUser(Auth::id()));
+        
+        // home = page with no history
+        // home2 = page with match history
+        if($this->historySkor() == false){
+            return view('home', compact('namaTim', 'daftarPemain', 'ratingSaya'))->with('noHistory', 'noHistory');
         }else{
             $historySkor = $this->historySkor();
-            foreach($historySkor as $hs);
-            $historyLawan = $this->historyLawan($hs->awayId);
-
-            return view('home', compact('namaTim', 'historySkor', 'historyLawan', 'daftarPemain', 'ratingSaya'))->with('hasHistory', 'has history');
+            return view('home2', compact('namaTim', 'historySkor', 'daftarPemain', 'ratingSaya'));
         }
     }
 
     public function historySkor(){
-        // mengambil history pertandingan user
-        return users_pertandingan::where('homeId', Auth::id())
-                ->join('pertandingan', 'users_pertandingan.pertandinganId', '=', 'pertandingan.id')
-                ->select('users_pertandingan.awayId', 'pertandingan.skorHome', 'pertandingan.skorAway', 'pertandingan.created_at')
+        $getUser = users_pertandingan::where('homeId', Auth::id())
+                ->select('pertandinganId', 'awayId')
                 ->get();
-    }
 
-    public function historyLawan($idLawan){
-        return Tim_User::where('usersId', $idLawan)
-                        ->join('tim', 'users_tim.timId', '=', 'tim.id')
-                        ->select('tim.nama')
-                        ->get();
+        if($getUser->isEmpty()){
+            return false;
+        }else{
+            foreach($getUser as $g);
+
+            // get lawan
+            $lawan = DB::table('users_tim')
+                    ->where('usersId', $g->awayId)
+                    ->join('tim', 'users_tim.timId', '=', 'tim.id')
+                    ->select('tim.nama')
+                    ->get();
+            foreach($lawan as $l);
+
+            // get skor
+            $skor = DB::table('pertandingan')
+                    ->where('id', $g->pertandinganId)
+                    ->select('skorHome', 'skorAway', 'created_at')
+                    ->get();
+            foreach($skor as $s);
+
+            // create collection
+            $history = collect([
+                        'lawan' => $l->nama, 
+                        'skorHome' => $s->skorHome, 
+                        'skorAway' => $s->skorAway, 
+                        'created_at' => $s->created_at
+                        ]);
+
+            // return collection
+            return $history;
+        }
     }
 
     public function hitungRatingUser($id){
-        $timId = Tim_User::where('usersId', $id)->select('timId')->get();
+        $timId = Tim_User::where('usersId', $id)
+                    ->select('timId')
+                    ->get();
+
         foreach($timId as $tim);
-        $ratingTim = DB::table('tim_player')->where('timId', $tim->timId)->join('player', 'tim_player.playerId', '=', 'player.id')->select('player.rating', 'player.posisi')->get();
+
+        $ratingTim = DB::table('tim_player')
+                    ->where('timId', $tim->timId)
+                    ->join('player', 'tim_player.playerId', '=', 'player.id')
+                    ->select('player.rating', 'player.posisi')
+                    ->get();
 
         $ratingFWD = 0;
         $ratingMID = 0;
@@ -111,8 +141,11 @@ class HomeController extends Controller
             }
         }
 
-        $rating = (($ratingFWD / $countFWD) + ($ratingMID / $countMID) + ($ratingDEF / $countDEF) + $ratingGK) / 4;
-
-        return $rating;
+        if($countFWD == 0 || $countMID == 0 || $countDEF == 0 ){
+            return 0;
+        }else{
+            $rating = (($ratingFWD / $countFWD) + ($ratingMID / $countMID) + ($ratingDEF / $countDEF) + $ratingGK) / 4;
+            return $rating;
+        }
     }
 }

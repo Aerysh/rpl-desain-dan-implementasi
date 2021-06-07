@@ -10,15 +10,15 @@
     </div>
     <div class="col-md-6">
         @if (session('voucher-sukses'))
-                <div class="alert alert-success" role="alert">
-                    Selamat! Topup Anda Berhasil, Saldo Akan Ditambahkan Ke Akun Anda.
-                </div>
-            @endif
-            @if (session('voucher-404'))
-                <div class="alert alert-danger" role="alert">
-                    Maaf, Kode Voucher Tidak Valid. Silahkan Coba Lagi.
-                </div>
-            @endif
+            <div class="alert alert-success" role="alert">
+                Selamat! Topup Anda Berhasil, Saldo Akan Ditambahkan Ke Akun Anda.
+            </div>
+        @endif
+        @if (session('voucher-404'))
+            <div class="alert alert-danger" role="alert">
+                Maaf, Kode Voucher Tidak Valid. Silahkan Coba Lagi.
+            </div>
+        @endif
         <div class="card">
             <div class="card-body">
                 <h5 class="card-title">Top Up</h5>
@@ -30,7 +30,9 @@
                     </div>
                     <div class="form-group">
                         <button type="submit" class="btn btn-primary">Redeem</button>
+                        
                     </div>
+                    <small>Untuk Pembelian Voucher Silahkan Hubungi Admin</small>
                 </form>
             </div>
         </div>
